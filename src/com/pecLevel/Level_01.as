@@ -1,0 +1,1 @@
+﻿package com.pecLevel{		public class Level_01 extends BakedLevel{				public function Level_01(e:Engine){			super(e);						if(Director.BAKED_MODE){				//Baked Mode				isBaked = true;				myXML = new XML(new Director.Level_01_XML());				bakeData();			}else {				//Debug Mode				loadFile("level_01.xml");			}		}	}}

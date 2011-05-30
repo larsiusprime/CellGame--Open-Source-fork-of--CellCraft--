@@ -1,0 +1,1 @@
+﻿package com.pecLevel com.pecLevel{	public class LevelEvents extends Object	{		public var eventList:Vector.<EventEntry> = new Vector.<EventEntry>();		public var goalList:Vector.<EventEntry> = new Vector.<EventEntry>(); // Do we need this one?	}}

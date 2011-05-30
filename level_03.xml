@@ -1,0 +1,264 @@
+<cellcraft>
+	<levelInfo>
+		<level index="4" title="Invasive Infection" />
+		<size width="500" height="500" />
+		<start x="0" y="0" />
+		<background name="petridish_green" />
+		<resources atp="500" na="10" aa="500" fa="50" g="50"/>
+		<organelles mito="1" chloro="0" ribo="25" lyso="0" slicer="0" perox="5"/>
+		<membrane nodes="3"/>
+	</levelInfo>
+
+	<levelStuff>
+		<goodies>
+			<stuff name="na_batch" type="na" count="50" spawn="0.05" active="false" />
+			<stuff name="fa_batch" type="fa" count="250" spawn="0.3" active="false" />
+			<stuff name="aa_batch" type="aa" count="100" spawn="0.3" active="true" />
+			<stuff name="g_batch" type="g" count="100" spawn="0.3" active="true" />
+		</goodies>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelStuff>
+
+	<levelThings>
+		<goodies>
+		</goodies>
+		<waves>
+			<wave id="inj_0" type="virus_injector" count="15" spread="2" delay="0" sleep_seconds="15" />
+			<wave id="inj_1" type="virus_injector" count="10" spread="2" delay="0" sleep_seconds="15"/>
+			
+			<wave id="inv_0" type="virus_invader" count="5" spread="2" vesicle="0" delay="0" sleep_seconds="15"/>
+			<wave id="inv_1" type="virus_invader" count="15" spread="2" vesicle="0" delay="0" sleep_seconds="15"/>
+			<wave id="inv_2" type="virus_invader" count="15" spread="2" vesicle="0.5" delay="0" sleep_seconds="15"/>
+			<wave id="inv_3" type="virus_invader" count="10" spread="2" vesicle="0.0" delay="0" sleep_seconds="15"/>
+		</waves>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelThings>
+	
+	<levelTriggers>
+		<objective id="load" active="true" sound="0" trigger="true">
+			<data name="Game Loads" hidden="true" type="game_load" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="0" />
+			<action>
+				<hide_interface id="ph"/>
+				<hide_interface id="sunlight"/>
+				<hide_interface id="daughtercells"/>
+				
+				<hide_organelle id="golgi"/>
+				
+				<wipe_organelle_act id="nucleus"/>
+				<add_organelle_act id="nucleus" value="buy_ribosome"/>
+				<add_organelle_act id="nucleus" value="buy_slicer"/>
+				<add_organelle_act id="nucleus" value="buy_dnarepair"/>
+				
+				<wipe_organelle_act id="mitochondrion"/>
+				<add_organelle_act id="mitochondrion" value="move"/>
+				<add_organelle_act id="mitochondrion" value="toggle"/>
+				
+				<wipe_organelle_act id="peroxisome"/>
+				<add_organelle_act id="peroxisome" value="move"/>
+				
+				<wipe_organelle_act id="er"/>
+				<add_organelle_act id="er" value="make_membrane"/>
+				<add_organelle_act id="er" value="take_membrane"/>
+				<add_organelle_act id="er" value="buy_peroxisome"/>
+				
+				<wipe_organelle_act id="golgi"/>
+				<hide_interface id="toxinlevel"/>
+				<set_sunlight value="1"/>
+				<set_toxinlevel value="0"/>
+				<set_cyto_process value="true"/>
+				<set_radicals value="true"/>
+			</action>
+		</objective>
+		
+		<objective id="start" active="true" sound="0" trigger="true">
+			<data name="Game Starts" hidden="true" type="game_start" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="45" />
+			<action>
+				<showTutorial id="Another mitochondrion">
+					<tutorial title="Another day, another cell. Let's see... let's add a second MITOCHONDRION." slide="talk_spike_normal"/>
+					<tutorial title="Get another Mitochondrion!" slide="objective"/>
+				</showTutorial>
+				<spawn_object id="ves_mitochondrion_dead" loc_id="nearby" move_type="towards_cell"/>
+				<activate_objective id="get_mito_ves"/>
+			</action>
+		</objective>
+		
+		<objective id="get_mito_ves" active="false" sound="2" trigger="true">
+			<data name="Get another Mitochondrion!" hidden="false" type="have_thing" targetType="mitochondrion" targetNum="2" progress="0" targetCondition="gr_eq" delay="135"/>
+			<action>
+				<showTutorial id="Damaged organelles">
+					<tutorial title="What's wrong with that mitochondrion?" slide="talk_sydney_anxious"/>
+					<tutorial title="It's damaged beyond repair." slide="talk_spike_nervous"/>
+					<tutorial title="About_damage" slide="about_damage"/>
+					<tutorial title="The cell needs LYSOSOMES to recycle big things like that!" slide="talk_sydney_normal"/>
+					<tutorial title="We'll need to add the GOLGI BODY first." slide="talk_sydney_normal"/>
+				</showTutorial>
+				<activate_objective id="get_golgi"/>
+				<show_newthing id="golgi"/>
+			</action>
+		</objective>
+		
+		<objective id="get_golgi" active="false" sound="2" trigger="true">
+			<data name="Get the Golgi Body" hidden="false" type="click_newthing" targetType="golgi" targetNum="1" progress="0" targetCondition="gr_eq" delay="0" />
+			<action>
+				<plop_organelle id="golgi"/>
+				<activate_objective id="plop_golgi"/>
+			</action>
+		</objective>
+		
+		<objective id="plop_golgi" active="false" sound="0" trigger="true">
+			<data name="Get the Golgi Body" hidden="false" type="halfplop_organelle" targetType="golgi" targetNum="1" progress="0" targetCondition="gr_eq" delay="45" />
+			<action>
+				<discovery id="golgi"/>
+				<showTutorial id="Golgi Body">
+					<tutorial title="You got the golgi body!" slide="discover_golgi"/>
+					<tutorial title="About Golgi" slide="about_golgi"/>
+					<tutorial title="About Recycling" slide="about_recycle"/>
+					<tutorial title="New Action!" slide="newaction_buy_lysosome"/>
+					<tutorial title="Make some lysosomes!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="make_lyso"/>
+				<add_organelle_act id="golgi" value="buy_lysosome"/>
+			</action>
+		</objective>
+		
+		<objective id="make_lyso" active="false" sound="2" trigger="true">
+			<data name="Make some lysosomes!" hidden="false" type="do_action" targetType="buy_lysosome" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="Lysosome production">
+					<tutorial title="Lysosome production: 1/5" slide="build_lyso_1" />
+					<tutorial title="Lysosome production: 2/5" slide="build_lyso_2" />
+					<tutorial title="Lysosome production: 3/5" slide="build_lyso_3" />
+					<tutorial title="Lysosome production: 4/5" slide="build_lyso_4" />
+					<tutorial title="Lysosome production: 5/5" slide="build_lyso_5" />
+					<tutorial title="Watch the process unfold!" slide="objective" />
+				</showTutorial>
+				<set_zoom value="0.25" time="15" />
+				<set_scroll_to target="nucleus" time="15" />
+				<activate_objective id="make_1_lyso"/>
+			</action>
+		</objective>
+		
+		<objective id="make_1_lyso" active="false" sound="2" trigger="true">
+			<data name="Watch the process unfold!" hidden="false" type="have_thing" targetType="lysosome" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial id="Lysosomes">
+					<tutorial title="You got Lysosomes!" slide="discover_lysosome"/>
+					<tutorial title="About Lysosomes" slide="about_lysosome"/>
+					<tutorial title="It takes many lysosomes to digest a mitochondrion." slide="talk_sydney_normal"/>
+					<tutorial title="Make 10 lysosomes!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="make_10_lyso"/>
+			</action>
+		</objective>
+		
+		<objective id="make_10_lyso" active="false" sound="2" trigger="false">
+			<data name="Make 10 Lysosomes!" hidden="false" type="have_thing" targetType="lysosome" targetNum="10" progress="0" targetCondition="gr_eq" delay="0"/>
+			<action>
+				<showTutorial id="Recycling with lysosomes">
+					<tutorial title="Now the cell can RECYCLE the damaged mitochondrion!" slide="talk_spike_normal"/>
+					<tutorial title="New Action!" slide="newaction_mito_recycle"/>
+					<tutorial title="Recycle the damaged mitochondrion!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="recycle_mito"/>
+				<add_organelle_act id="mitochondrion" value="recycle"/>
+				<add_organelle_act id="peroxisome" value="recycle"/>
+			</action>
+		</objective>
+
+		<objective id="recycle_mito" active="false" sound="2" trigger="false">
+			<data name="Recycle the damaged mitochondrion!" hidden="false" type="have_thing" targetType="mitochondrion" targetNum="1" progress="0" targetCondition="ls_eq" delay="0"/>
+			<action>
+				<showTutorial id="Dividing mitochondria">
+					<tutorial title="Wow! That's a lot of resources!" slide="talk_spike_normal"/>
+					<tutorial title="Yeah, that's enough to make a NEW mitochondrion!" slide="talk_sydney_normal"/>
+					<tutorial title="New Action!" slide="newaction_mito_divide"/>
+					<tutorial title="Divide the healthy mitochondrion!" slide="objective"/>
+				</showTutorial>
+				<add_organelle_act id="mitochondrion" value="divide"/>
+				<activate_objective id="divide_mito"/>
+			</action>
+		</objective>
+		
+		<objective id="divide_mito" active="false" sound="2" trigger="false">
+			<data name="Divide the healthy mitochondrion!" hidden="false" type="have_thing" targetType="mitochondrion" targetNum="2" progress="0" targetCondition="gr_eq" delay="0"/>
+			<action>
+				<showTutorial id="Invader virus">
+					<tutorial title="BEHOLD! The Destroyer Cometh!" slide="talk_jeeves_2hands"/>
+					<tutorial title="Feeling dramatic, Malcolm?" slide="talk_spike_nervous"/>
+					<tutorial title="Indeed! I've isolated a cool new virus strain!" slide="talk_jeeves_normal"/>
+					<tutorial title="That's...um, awesome. What's it do?" slide="talk_spike_nervous"/>
+					<tutorial title="It INVADES the cell whole, so slicer enzymes are less effective." slide="talk_jeeves_normal"/>
+					<tutorial title="Not so fast, Malcolm! Our cell has LYSOSOMES now. It'll eat those viruses right up!" slide="talk_sydney_excited"/>
+					<tutorial title="We shall see..." slide="talk_jeeves_crossarms"/>
+				</showTutorial>
+				<activate_objective id="virus_alert"/>
+				<send_wave id="inv_0"/>
+			</action>
+		</objective>
+		
+		
+		<objective id="virus_alert" active="false" sound="0" trigger="true">
+			<data name="Survive the viruses!" hidden="false" type="enemy_alert_finish" targetType="inv_0" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial id="Viral defense : Invader Virus">
+					<tutorial title="Viral defense 1/3" slide="invader_defense_1"/>
+					<tutorial title="Viral defense 2/3" slide="invader_defense_2"/>
+					<tutorial title="Viral defense 3/3" slide="invader_defense_3"/>
+					<tutorial title="" slide="tip_slicer_lyso"/>
+					<tutorial title="Survive the viruses!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="kill_viruses"/>
+			</action>
+		</objective>
+		
+		<objective id="kill_viruses" active="false" sound="0" trigger="false">
+			<data name="Survive the viruses!" hidden="false" type="enemy_survive" targetType="inv_0" targetNum="0" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="SPIKE: Hah! Take that, Malcolm!">
+					<tutorial title="Hah! Take that, Malcolm!" slide="talk_spike_happy"/>
+					<tutorial title="I'm just getting started, folks." slide="talk_jeeves_crossarms"/>
+				</showTutorial>
+				<send_wave id="inv_3"/>
+				<send_wave id="inj_0"/>
+				<activate_objective id="kill_viruses_3a"/>
+				<activate_objective id="kill_viruses_3b"/>
+				<activate_objective id="survive_all"/>
+			</action>
+		</objective>
+		
+		<objective id="kill_viruses_3a" active="false" sound="0" trigger="true">
+			<data name="Survive the viruses!" hidden="true" type="enemy_survive" targetType="inv_3" targetNum="0" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<throw_flag id="survive_all"/>
+			</action>
+		</objective>
+		
+		<objective id="kill_viruses_3b" active="false" sound="0" trigger="true">
+			<data name="Survive the viruses!" hidden="true" type="enemy_survive" targetType="inj_0" targetNum="0" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<throw_flag id="survive_all"/>
+			</action>
+		</objective>
+		
+		<objective id="survive_all" active="false" sound="0" trigger="true">
+			<data name="Survive the viruses!" hidden="false" type="throw_flag" targetType="survive_all" targetNum="2" progress="0" targetCondition="gr_eq" delay="10"/>
+			<action>
+				<showTutorial id="You win!">
+					<tutorial title="Rats! Those were my last viruses. I'll go breed some more." slide="talk_jeeves_normal"/>
+					<tutorial title="Haha! So long, Jeeves!" slide="talk_sydney_happy"/>
+					<tutorial title="Next time, organic weaklings! NEXT TIME!" slide="talk_jeeves_2hands" />
+					<tutorial title="...I've just always wanted to say that. Good job, folks." slide="talk_jeeves_normal" />
+				</showTutorial>
+				<finish_level value="victory"/>
+			</action>
+		</objective>
+		
+	</levelTriggers>
+	
+</cellcraft>

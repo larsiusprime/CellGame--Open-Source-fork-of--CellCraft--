@@ -1,0 +1,536 @@
+<cellcraft>
+	<levelInfo>
+		<level index="2" title="Petri Dish" />
+		<size width="500" height="500" />
+		<start x="0" y="0" />
+		<background name="petridish_green" />
+		<resources atp="1000" na="10" aa="100" fa="0" g="50"/>
+		<organelles mito="1" chloro="0" ribo="25" lyso="0" slicer="50" perox="0"/>
+		<membrane nodes="0"/>
+	</levelInfo>
+
+	<levelStuff>
+		<goodies>
+			<stuff name="na_batch" type="na" count="50" spawn="0.05" active="false" />
+			<stuff name="fa_batch" type="fa" count="250" spawn="0.3" active="false" />
+			<stuff name="aa_batch" type="aa" count="50" spawn="0.1" active="false" />
+			<stuff name="g_batch" type="g" count="300" spawn="0.2" active="false" />
+		</goodies>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelStuff>
+
+	<levelThings>
+		<goodies>
+		</goodies>
+		<waves>
+			<wave id="inj_0" type="virus_injector" count="15" spread="2" delay="0" sleep_seconds="15" />
+			<wave id="inj_1" type="virus_injector" count="25" spread="2" delay="0" sleep_seconds="15"/>
+			<wave id="inj_2" type="virus_injector" count="30" spread="2" delay="0" sleep_seconds="15"/>
+		</waves>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelThings>
+	
+	<levelTriggers>
+		<objective id="load" active="true" sound="0" trigger="true">
+			<data name="Game Loads" hidden="true" type="game_load" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="0" />
+			<action>
+				<hide_organelle id="golgi"/>
+				<hide_organelle id="er"/>
+				<hide_resource id="fa"/>
+				
+				<hide_interface id="ph"/>
+				<hide_interface id="sunlight"/>
+				<hide_interface id="daughtercells"/>
+				<wipe_organelle_act id="nucleus"/>
+				<add_organelle_act id="nucleus" value="buy_ribosome"/>
+				<add_organelle_act id="nucleus" value="buy_slicer"/>
+				<wipe_organelle_act id="mitochondrion"/>
+				<wipe_organelle_act id="er"/>
+				<wipe_organelle_act id="golgi"/>
+				<hide_interface id="toxinlevel"/>
+				<set_sunlight value="1"/>
+				<set_toxinlevel value="0"/>
+				
+				
+				<!--<add_organelle_act id="mitochondrion" value="move"/>-->
+				<!--<add_organelle_act id="mitochondrion" value="toggle"/>-->
+				<!--<add_organelle_act id="mitochondrion" value="disable"/>-->
+				<set_cyto_process value="true"/>
+				<set_radicals value="false"/>
+			</action>
+		</objective>
+		
+		<objective id="start" active="true" sound="0" trigger="true">
+			<data name="Game Starts" hidden="true" type="game_start" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="90" />
+				<action>
+				<showTutorial id="Selecting things">
+					<tutorial title="The viruses are gone, so the cell won't need those slicer enzymes anymore." slide="talk_sydney_nervous"/>
+					<tutorial title="You're right. The cell should be able to RECYCLE them." slide="talk_spike_normal"/>
+					<tutorial title="How to : recycle things" slide="howto_select"/>
+					<tutorial title="Select all your SLICER ENZYMES." slide="objective"/>
+				</showTutorial>
+				
+				<activate_objective id="select_slicers"/>
+			</action>
+		</objective>
+		
+		<objective id="select_slicers" active="false" sound="2" trigger="true">
+			<data name="Select all Slicer Enzymes" hidden="false" type="select_thing" targetType="slicer" targetNum="1" progress="0" targetCondition="gr_eq" delay="0"/>
+			<action>
+				<showTutorial id="Recycling things">
+					<tutorial title="How to: Recycle multiple units" slide="howto_recycle"/>
+				</showTutorial>
+				<deactivate_objective id="select_some_slicers"/>
+				<activate_objective id="recycle_slicer"/>
+				
+			</action>
+		</objective>
+		
+		<objective id="recycle_slicer" active="false" sound="2" trigger="false">
+			<data name="Recycle all Slicer Enzymes" hidden="false" type="have_thing" targetType="slicer" targetNum="0" progress="0" targetCondition="ls_eq" delay="45" />
+			<action>
+				<showTutorial id="About Fatty Acids">
+					<tutorial title="Awesome! The cell can re-use those AMINO ACIDS for other things." slide="talk_sydney_normal"/>
+					<tutorial title="Like making the cell BIGGER?" slide="talk_spike_normal"/>
+					<tutorial title="Hmmm...it still needs FATTY ACIDS for that." slide="talk_sydney_normal"/>
+					<tutorial title="The Cell makes Fatty Acids from Glucose" slide="g_to_fa_1"/>
+					<tutorial title="The Cell makes Fatty Acids from Glucose" slide="g_to_fa_2"/>
+					<tutorial title="I've got the glucose right here. Let's fatten this cell up!" slide="talk_sydney_normal"/>
+					<tutorial title="Collect enough Glucose to produce Fatty Acids!" slide="objective"/>
+				</showTutorial>
+
+				<activate_stuff id="g_batch"/>
+				<activate_stuff id="aa_batch"/>
+				<spawn_object id="gem_g" value="15" count="20" loc_id="surround" distance="0" />
+				
+				<activate_objective id="get_fa"/>
+				<activate_objective id="get_g"/>
+			</action>
+		</objective>		
+		
+		
+		<objective id="get_g" active="false" sound="0" trigger="true">
+			<data name="Find Glucose" hidden="true" type="have_resource" targetType="g" targetNum="54" progress="0" targetCondition="gr_eq" delay="10"/>
+			<action>
+				<showTutorial id="Cytoplasm turns excess Glucose to Fatty Acids">
+					<tutorial title="Look! The CYTOPLASM is turning excess GLUCOSE into FATTY ACIDS!" slide="talk_sydney_normal"/>
+				</showTutorial>
+				<set_zoom value="0.25" time="30" />
+				<set_scroll_to target="centrosome" time="30" />
+			</action>
+		</objective>
+		
+		<objective id="get_fa" active="false" sound="2" trigger="true">
+			<data name="Collect enough Glucose to produce Fatty Acids" hidden="false" type="have_resource" targetType="fa" targetNum="1" progress="0" targetCondition="gr_eq" delay="0"/>
+			<pre_action>
+				<show_resource id="fa"/>
+				<activate_objective id="find_fa"/>
+			</pre_action>
+		</objective>
+		
+		<objective id="find_fa" active="false" sound="0" trigger="true">
+			<data name="Produce Fatty Acids from Glucose" hidden="false" type="have_resource" targetType="fa" targetNum="1" progress="0" targetCondition="gr_eq" delay="0" />
+			<action>
+				<discovery id="fa"/>
+				<showTutorial id="You got Fatty Acids!">
+					<tutorial title="You discovered Fatty Acids!" slide="discover_fa"/>
+					<tutorial title="Fatty Acids are the building blocks of Membrane" slide="about_fa" />
+					<tutorial title="Collect more Glucose, then produce 10 Fatty Acids!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="find_lots_fa"/>
+				<set_zoom value="0.05" time="30" />
+				<set_scroll_to target="centrosome" time="30" />
+			</action>
+		</objective>
+		
+		<objective id="find_lots_fa" active="false" sound="2" trigger="false">
+			<data name="Produce 10 Fatty Acids" hidden="false" type="have_resource" targetType="fa" targetNum="10" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial id="The Endoplasmic Reticulum">
+					<tutorial title="Awesome! It's got plenty of FATTY ACIDS now!" slide="talk_spike_happy"/>
+					<tutorial title="The cell needs the ENDOPLASMIC RETICULUM to use those Fatty Acids!" slide="talk_sydney_normal"/>
+				</showTutorial>
+				
+				<show_newthing id="er"/>
+				<activate_objective id="get_er"/>
+			</action>
+		</objective>
+		
+		<objective id="get_er" active="false" sound="2" trigger="true">
+			<data name="Get the Endoplasmic Reticulum" hidden="false" type="click_newthing" targetType="er" targetNum="1" progress="0" targetCondition="gr_eq" delay="0" />
+			<action>
+				<plop_organelle id="er"/>
+				<activate_objective id="plop_er"/>
+			</action>
+		</objective>
+		
+		<objective id="plop_er" active="false" sound="0" trigger="true">
+			<data name="Get the Endoplasmic Reticulum" hidden="false" type="halfplop_organelle" targetType="er" targetNum="1" progress="0" targetCondition="gr_eq" delay="45" />
+			<action>
+				<discovery id="er"/>
+				<showTutorial id="Making membrane">
+					<tutorial title="You got the Endoplasmic Reticulum!" slide="discover_er"/>
+					<tutorial title="The ER makes membrane" slide="about_er"/>
+					<tutorial title="Now the cell can expand its membrane and grow bigger!" slide="talk_sydney_excited"/>
+					<tutorial title="How to: make membrane" slide="newaction_make_membrane" />
+					<tutorial title="Click on the E.R. and make some more membrane!" slide="objective" />
+				</showTutorial>
+				<add_organelle_act id="er" value="make_membrane"/> 
+				<activate_objective id="do_make_membrane"/>
+			</action>
+		</objective>
+		
+		<objective id="do_make_membrane" active="false" sound="2" trigger="true">
+			<data name="Make some more membrane!" hidden="false" type="do_action" targetType="make_membrane" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="Membrane production">
+					<tutorial title="Membrane production: 1/7" slide="about_membrane_1" />
+					<tutorial title="Membrane production: 2/7" slide="about_membrane_2" />
+					<tutorial title="Membrane production: 3/7" slide="about_membrane_3" />
+					<tutorial title="Membrane production: 4/7" slide="about_membrane_4" />
+					<tutorial title="Membrane production: 5/7" slide="about_membrane_5" />
+					<tutorial title="Membrane production: 6/7" slide="about_membrane_6" />
+					<tutorial title="Membrane production: 7/7" slide="about_membrane_7" />
+					<tutorial title="Watch the process unfold!" slide="objective" />
+				</showTutorial>
+				<set_zoom value="0.25" time="15" />
+				<set_scroll_to target="nucleus" time="15" />
+				<activate_objective id="make_membrane_vesicle"/>
+			</action>
+		</objective>
+		
+		<objective id="make_membrane_vesicle" active="false" sound="2" trigger="true">
+			<data name="Watch the process unfold!" hidden="false" type="have_thing" targetType="transport_vesicle" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<set_zoom value="0.05" time="15" />
+				<set_scroll_to target="centrosome" time="15" />
+				<activate_objective id="make_membrane"/>
+			</action>
+		</objective>
+		
+		<objective id="make_membrane" active="false" sound="0" trigger="true">
+			<data name="Watch the process unfold!" hidden="false" type="expand_membrane" targetType="null" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="Expanding membrane">
+					<tutorial title="Expanding Membrane expands your field of view" slide="expand_view" />
+					<tutorial title="Expanding Membrane increases max health" slide="expand_health" />
+					<tutorial title="Expand the membrane 2 more times!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="make_membrane_1"/>
+			</action>
+		</objective>
+		
+		<objective id="make_membrane_1" active="false" sound="2" trigger="true">
+			<data name="Expand the membrane 2 more times!" hidden="false" type="expand_membrane" targetType="null" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<activate_objective id="make_membrane_2"/>
+			</action>
+		</objective>
+		
+		<objective id="make_membrane_2" active="false" sound="1" trigger="false">
+			<data name="Expand the membrane 1 more time!" hidden="false" type="expand_membrane" targetType="null" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			
+			<action>
+				<showTutorial id="Recycling membrane">
+					<tutorial title="" slide="about_recycle_membrane"/>
+					<tutorial title="" slide="newaction_take_membrane"/>
+					<tutorial title="Recycle 1 unit of membrane!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="eat_membrane"/>
+				<add_organelle_act id="er" value="take_membrane"/>
+			</action>
+		</objective>	
+		
+		<objective id="eat_membrane" active="false" sound="0" trigger="false">
+			<data name="Recycle 1 unit of membrane!" hidden="false" type="shrink_membrane" targetType="null" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="SPIKE: Hey! I think something's happening with the Mitochondrion...">
+					<tutorial title="Hey! I think something's happening with the Mitochondrion..." slide="talk_spike_anxious"/>
+				</showTutorial>
+				<activate_objective id="have_radical"/>
+				<spawn_radicals count="5" origin="mitochondrion" target="nucleus" delay="25"/>
+			</action>
+		</objective>
+			
+		<objective id="have_radical" active="false" sound="0" trigger="true">
+			<data name=" " hidden="false" type="have_thing" targetType="radical" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial id="SYDNEY: Whoa! What was that?">
+					<tutorial title="Whoa! What was that?" slide="talk_sydney_anxious"/>
+					<tutorial title="We'd better take a closer look!" slide="talk_sydney_anxious"/>
+				</showTutorial>
+				<set_zoom value="0.25" time="15" />
+				<set_scroll_to target="mitochondrion" time="15" />
+				<activate_objective id="damage_nucleus"/>
+			</action>
+		</objective>
+		
+		<objective id="damage_nucleus" active="false" sound="0" trigger="true">
+			<data name="???" hidden="false" type="radical_damage" targetType="nucleus" targetNum="1" progress="0" targetCondition="true" delay="30"/>
+				<action>
+				<showTutorial id="Free Radicals!">
+					<tutorial title="Oh no! I'm detecting FREE RADICALS in this cell! They just damaged the nucleus!" slide="talk_spike_anxious"/>
+					<tutorial title="Free Radicals are dangerous!" slide="about_free_radicals_1"/>
+					<tutorial title="Free Radicals damage DNA and organelles" slide="about_free_radicals_2"/>
+					<tutorial title="What can the cell do about this?" slide="talk_sydney_anxious"/>
+					<tutorial title="First of all, it can MOVE that Mitochondrion away from the Nucleus." slide="talk_spike_normal" />
+					<tutorial title="New Action!" slide="newaction_mito_move"/>
+					<tutorial title="Move the Mitochondrion away from the Nucleus!" slide="objective"/>
+				</showTutorial>
+				<add_organelle_act id="mitochondrion" value="move"/>
+				<activate_objective id="move_mito_1"/>
+				<activate_objective id="move_mito_2"/>
+				<set_radicals value="true"/>
+			</action>
+		</objective>
+		
+		<objective id="move_mito_1" active="false" sound="2" trigger="true">
+			<data name="Move the Mitochondrion" hidden="false" type="do_action" targetType="prepare_move" targetNum="1" progress="0" targetCondition="true" delay="5"/>
+			<action>
+				<showTutorial id="Moving organelles">
+					<tutorial title="How to: move organelle" slide="howto_move_mito"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<objective id="move_mito_2" active="false" sound="0" trigger="true">
+			<data name="Move the Mitochondrion" hidden="true" type="do_action" targetType="move" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="Disabling organelles">
+					<tutorial title="Good, it's further away now. The free radicals will take longer to damage the cell." slide="talk_spike_normal"/>
+					<tutorial title="To be absolutely sure, the cell needs to DISABLE that Mitochondrion for now." slide="talk_sydney_normal"/>
+					<tutorial title="New Action!" slide="newaction_mito_disable"/>
+					<tutorial title="Click the Mitochondrion and Disable it!" slide="objective"/>
+				</showTutorial>
+				
+				<add_organelle_act id="mitochondrion" value="toggle"/>
+				<activate_objective id="disable_mito"/>
+			</action>
+		</objective>
+		
+		<objective id="disable_mito" active="false" sound="2" trigger="false">
+			<data name="Disable the Mitochondrion" hidden="false" type="do_action" targetType="disable" targetNum="1" progress="0" targetCondition="true" delay="15"/>
+			<action>
+				<showTutorial id="Disabled organelles">
+					<tutorial title="Now that the Mitochondrion's disabled, it won't produce free radicals." slide="talk_spike_normal"/>
+					<tutorial title="It also won't produce any ATP, so the cell will have to turn it back on sometime." slide="talk_sydney_normal"/>
+					<tutorial title="The Cell's safe now. Let's check the Nucleus for Damage." slide="talk_spike_normal"/>
+					<tutorial title="Click the Nucleus and Inspect it for Damage!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="check_nucleus"/>
+			</action>
+		</objective>
+		
+		<objective id="check_nucleus" active="false" sound="2" trigger="true">
+			<data name="Click the Nucleus and check for damage!" hidden="false" type="select_thing" targetType="nucleus" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<pre_action>
+				
+			</pre_action>
+			<action>
+				<showTutorial id="About Damage">
+					<tutorial title="About Damage" slide="nucleus_damage"/>
+					<tutorial title="Well, the damage doesn't look too bad. Will the cell be okay?" slide="talk_sydney_nervous"/>
+					<tutorial title="It should be, if it can make DNA REPAIR ENZYMES to fix the damage!" slide="talk_spike_nervous"/>
+					<tutorial title="DNA Repair Enzymes repair the Nucleus" slide="about_dna_repair"/>
+					<tutorial title="New Action!" slide="newaction_buy_dna_repair"/>
+					<tutorial title="Build DNA repair enzymes!" slide="objective"/>
+				</showTutorial>
+				<add_organelle_act id="nucleus" value="buy_dnarepair"/>
+				<activate_objective id="make_dna_repair"/>
+			</action>
+		</objective>
+
+		<objective id="make_dna_repair" active="false" sound="2" trigger="false">
+			<data name="Make DNA Repair Enzymes" hidden="false" type="heal_thing" targetType="nucleus" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial id="Vesicles">
+					<tutorial title="Great! Those enzymes are fixing the damage to the Nucleus' DNA!" slide="talk_spike_happy"/>
+					<tutorial title="Watch your Nucleus' health!" slide="about_health"/>
+					<tutorial title="Now the cell needs a way to FIGHT the FREE RADICALS." slide="talk_spike_normal"/>
+					<tutorial title="I'm sure there's some sort of VESICLE the cell can make from the ER to handle that..." slide="talk_sydney_normal"/>
+					<tutorial title="" slide="about_er_vesicles"/>
+					<tutorial title="" slide="about_vesicles_1"/>
+					<tutorial title="" slide="about_vesicles_2"/>
+					<tutorial title="" slide="about_vesicles_3"/>
+					<tutorial title="The vesicle that absorbs free radicals is the PEROXISOME!" slide="talk_sydney_normal"/>
+					<tutorial title="New Action!" slide="newaction_buy_peroxisome"/>
+				</showTutorial>
+				<add_organelle_act id="er" value="buy_peroxisome"/> 
+				<activate_objective id="make_perox"/>
+			</action>
+		</objective>
+		
+		<objective id="make_perox" active="false" sound="2" trigger="true">
+			<data name="Click the ER and make some peroxisomes!" hidden="false" type="have_thing" targetType="peroxisome" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+				<action>
+				<showTutorial id="You got a Peroxisome!">
+					<tutorial title="You got a Peroxisome!" slide="discover_peroxisome"/>
+					<tutorial title="Peroxisomes absorb free radicals" slide="about_peroxisomes_1"/>
+					<tutorial title="Great! As long as the cell has enough PEROXISOMES, free radicals are no problem!" slide="talk_sydney_normal"/>
+					<tutorial title="Now the cell can ENABLE the mitochondrion again." slide="talk_sydney_normal"/>
+					<tutorial title="Select the Mitochondrion and enable it!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="enable_mito"/>
+				
+			</action>
+		</objective>
+		
+		<objective id="enable_mito" active="false" sound="2" trigger="false">
+			<data name="Select the Mitochondrion and ENABLE it" hidden="false" type="do_action" targetType="enable" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial id="Free Radicals & Peroxisomes">
+					<tutorial title="Looks like the Mitochondrion will constantly produce free radicals...good thing the cell's got PEROXISOMES." slide="talk_spike_normal"/>
+					<tutorial title="PEROXISOMES don't last forever, though. The cell will have to replace them over time." slide="talk_sydney_normal"/>
+					<tutorial title="Produce 3 peroxisomes!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="make_perox_3"/>
+			</action>
+		</objective>		
+		
+		<objective id="make_perox_3" active="false" sound="2" trigger="false">
+			<data name="Produce 3 peroxisomes!" hidden="false" type="have_thing" targetType="peroxisome" targetNum="3" progress="0" targetCondition="gr_eq" delay="10"/>
+			<action>
+				<showTutorial id="Peroxisomes">
+						<tutorial title="Let's see those peroxisomes get to work!" slide="talk_spike_normal"/>
+						<tutorial title="Absorb 3 free radicals with your peroxisomes!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="absorb_radicals_3"/>
+			</action>
+		</objective>
+		
+		<objective id="absorb_radicals_3" active="false" sound="1" trigger="true">
+			<data name="Absorb 3 free radicals!" hidden="false" type="absorb_radical" targetType="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<activate_objective id="absorb_radicals_2"/>
+			</action>
+		</objective>
+		
+		<objective id="absorb_radicals_2" active="false" sound="1" trigger="true">
+			<data name="Absorb 2 free radicals!" hidden="false" type="absorb_radical" targetType="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<activate_objective id="absorb_radicals_1"/>
+			</action>
+		</objective>
+		
+		<objective id="absorb_radicals_1" active="false" sound="1" trigger="false">
+			<data name="Absorb 1 free radical!" hidden="false" type="absorb_radical" targetType="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial id="Viruses!">
+					<tutorial title="Great! Those peroxisomes have the free radicals under control." slide="talk_spike_normal"/>
+					<tutorial title="Say, what's that pink blob in the edge of the petri dish?" slide="talk_jeeves_normal"/>
+					<tutorial title="Oh no! Viruses!" slide="talk_sydney_anxious"/>
+					<tutorial title="Remember: build SLICER ENZYMES from the NUCLEUS to fight the viruses!" slide="objective"/>
+				</showTutorial>
+				<send_wave id="inj_0"/>
+				<activate_objective id="survive_0"/>
+			</action>
+		</objective>-->
+		
+		<objective id="survive_0" active="false" sound="0" trigger="false">
+			<data name="Survive the Viruses!" hidden="false" type="enemy_survive" targetType="inj_0" targetNum="0" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="JEEVES: You guys really need to be more careful...">
+					<tutorial title="You guys really need to be more careful..." slide="talk_jeeves_normal"/>
+					<tutorial title="Jeeves, did you have something to do with this?" slide="talk_sydney_angry"/>
+					<tutorial title="As a matter of fact, I did." slide="talk_jeeves_crossarms"/>
+					<tutorial title="But why, Jeeves?" slide="talk_spike_nervous"/>
+					<tutorial title="DO YOU REALIZE WHAT IS AT STAKE???" slide="talk_jeeves_1hand"/>
+					<tutorial title="The fate of the SPECIES!" slide="talk_jeeves_2hands"/>
+					<tutorial title="Well, YOUR species at any rate. Seriously guys, you've been coddling these cells. Let's kick it up a notch, shall we?" slide="talk_jeeves_normal"/>
+				</showTutorial>
+				<send_wave id="inj_1"/>
+				<activate_objective id="survive_1"/>
+			</action>
+		</objective>
+		
+		<objective id="survive_1" active="false" sound="0" trigger="false">
+			<data name="Survive the Viruses!" hidden="false" type="enemy_survive" targetType="inj_1" targetNum="0" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="JEEVES: Looks like they made it. And those were just the wimpy viruses...">
+					<tutorial title="Looks like they made it. And those were just the wimpy viruses..." slide="talk_jeeves_normal"/>
+					<tutorial title="I'll be cooking up some stronger stuff for tomorrow. You best get your little cells ready." slide="talk_jeeves_crossarms"/>
+					<tutorial title="Wow, Jeeves is really serious about this." slide="talk_sydney_anxious"/>
+					<tutorial title="Yeah! We'd best get ready for his next challenge!" slide="talk_spike_nervous"/>
+				</showTutorial>
+				<finish_level value="victory"/>
+			</action>
+		</objective>
+		
+		<!--<objective id=""-->
+		
+		
+		<objective id="impossible" active="false" sound="2">
+			<data name="End of content!" hidden="false" type="have_thing" targetType="nucleus" targetNum="2" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial>
+					<tutorial title="This slide is impossible to view!" slide="generic"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<!--<objective id="something">
+			<data/>
+			<action>
+				<showTutorial>
+					<tutorial title="About Vesicles 1/3" slide="about_vesicles_1"/>
+					<tutorial title="About Vesicles 2/3" slide="about_vesicles_2"/>
+					<tutorial title="About Vesicles 3/3" slide="about_vesicles_3"/>
+					<tutorial title="Alrighty, let's drop in a vesicle and see if the cell can absorb it." slide="talk_spike_normal"/>
+				</showTutorial>
+				<spawn_object id="ves_protein_glob" loc_id="nearby" move_type="towards_cell"/>
+				
+				<spawn_object id="ves_protein_glob" loc_id="nearby" />
+				<spawn_object id="ves_protein_glob" loc_id="nearby" />
+				
+				<activate_objective id="get_protein"/>
+			</action>
+		</objective>-->
+		
+		<objective id="get_protein" active="false">
+			<data name="Find and abosrb the vesicle!" hidden="false" type="have_thing" targetType="protein_glob" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<discovery id="protein_glob"/>
+				<showTutorial>
+					<tutorial title="You found a glob of protein!" slide="discover_protein_glob"/>
+					<tutorial title="Protein needs to be digested" slide="about_protein_glob"/>
+					<tutorial title="The cell has to make LYSOSOMES to digest that protein glob!" slide="talk_spike_normal"/>
+					<tutorial title="How to : Make Lysosomes" slide="click_golgi"/>
+				</showTutorial>
+				<activate_objective id="impossible"/>
+			</action>
+		</objective>
+		
+		<objective id="click_nucleus" active="false" sound="2">
+			<data name="Click on the Golgi" hidden="false" type="select_thing" targetType="golgi" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial>
+					<tutorial title="How to build things: 1/4" slide="about_select_1"/>
+					<tutorial title="How to build things: 2/4" slide="about_select_2"/>
+					<tutorial title="How to build things: 3/4" slide="about_actioncost"/>
+					<tutorial title="How to build things: 4/4" slide="buy_ribosomes"/>
+				</showTutorial>
+				<activate_objective id="action_buy_ribosome"/>
+			</action>
+		</objective>
+		
+		<objective id="impossible" active="false" sound="2">
+			<data name="End of content. I'm working on it!" hidden="false" type="have_thing" targetType="nucleus" targetNum="2" progress="0" targetCondition="gr_eq" delay="45" />
+			<action>
+				<showTutorial>
+					<tutorial title="How'd you get here? This should be impossible!" slide="talk_sydney_normal"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+
+
+		
+	</levelTriggers>
+	
+</cellcraft>

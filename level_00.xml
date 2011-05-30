@@ -1,0 +1,275 @@
+<cellcraft>
+	<levelInfo>
+		<level index="1" title="Welcome to CellCraft!" />
+		<size width="500" height="500" />
+		<start x="0" y="0" />
+		<background name="petridish" />
+		<resources atp="1000" na="0" aa="0" fa="0" g="0"/>
+		<organelles mito="0" chloro="0" ribo="0" lyso="0" slicer="0" perox="0"/>
+		<membrane nodes="0"/>
+	</levelInfo>
+
+	<levelStuff>
+		<goodies>
+			<stuff name="na_batch" type="na" count="50" spawn="0.05" active="false" />
+			<stuff name="fa_batch" type="fa" count="50" spawn="0.1" active="false" />
+			<stuff name="aa_batch" type="aa" count="50" spawn="0.1" active="false" />
+			<stuff name="g_batch" type="g" count="200" spawn="0.3" active="false" />
+		</goodies>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelStuff>
+
+	<levelThings>
+		<goodies>
+		</goodies>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelThings>
+	
+	<levelTriggers>
+		<objective id="load" active="true" sound="0" trigger="true">
+			<data name="Game Loads" hidden="true" type="game_load" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="0" />
+			<action>
+				<hide_organelle id="nucleus"/>
+				<hide_organelle id="centrosome"/>
+				<hide_organelle id="golgi"/>
+				<hide_organelle id="er"/>
+				<hide_resource id="atp"/>
+				<hide_resource id="na"/>
+				<hide_resource id="aa"/>
+				<hide_resource id="fa"/>
+				<hide_resource id="g"/>
+				<hide_interface id="membranehealth"/>
+				<hide_interface id="quantpanel"/>
+				<hide_interface id="discovery"/>
+				<hide_interface id="ph"/>
+				<hide_interface id="sunlight"/>
+				<hide_interface id="menu"/>
+				<hide_interface id="pause"/>
+				<hide_interface id="tutorial_glass"/>
+				<hide_interface id="daughtercells"/>
+				<hide_interface id="zoomer"/>
+				<hide_interface id="toxinlevel"/>
+				<set_sunlight value="1"/>
+				<set_toxinlevel value="0"/>
+				<set_cyto_process value="false"/>
+				<set_radicals value="false"/>
+			</action>
+		</objective>
+		
+		<objective id="start" active="true" sound="0" trigger="true">
+			<data name="Game Starts" hidden="true" type="game_start" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="0" />
+			<action>
+				<showTutorial id="Welcome to CellCraft!">
+					<tutorial title="Welcome to CellCraft!" slide="welcome"/>
+					<!--<tutorial title="Suddenly, a mysterious figure appears!" slide="generic"/>-->
+					<tutorial title="Okay, let's see how our cell is doing..." slide="talk_spike_mysterious_first"/>
+					<tutorial title="Hmmm, not much to look at. First thing it needs is a CENTROSOME. Let's splice one in." slide="talk_spike_mysterious_first"/>
+					<!--<tutorial title="Get the centrosome!" slide="objective"/>-->
+				</showTutorial>
+				<wipe_organelle_act id="mitochondrion"/>
+				<show_newthing id="centrosome"/>
+				
+				<activate_objective id="get_centrosome"/>
+				<!--<showTutorial>
+					<tutorial title="Welcome to CellCraft!" slide="welcome"/>
+					<tutorial title="Go and Explore!" slide="welcome_explore"/>
+					<tutorial title="The Plasma Membrane" slide="about_membrane"/>
+					<tutorial title="How to: Pseudopod" slide="howto_ppod"/>
+				</showTutorial>
+				<activate_objective id="ppod"/>-->
+				<show_interface id="menu"/>
+				<show_interface id="pause"/>
+				<show_interface id="tutorial_glass"/>
+				<!--<finish_level value="victory" cinema="scene1"/>-->
+
+			</action>
+		</objective>
+		
+		<objective id="get_centrosome" active="false" sound="2" trigger="true">
+			<data name="Get the Centrosome" hidden="false" type="click_newthing" targetType="centrosome" targetNum="1" progress="0" targetCondition="gr_eq" delay="15" />
+			<action>
+				<plop_organelle id="centrosome"/>
+				<activate_objective id="plop_centrosome"/>
+			</action>
+		</objective>
+		
+		<objective id="plop_centrosome" active="false" sound="0" trigger="true">
+			<data name="Get the Centrosome" hidden="false" type="halfplop_organelle" targetType="centrosome" targetNum="1" progress="0" targetCondition="gr_eq" delay="30" />
+			<action>
+				<discovery id="centrosome"/>
+				<showTutorial id="Centrosome & Pseudopod">
+					<tutorial title="You got the Centrosome!" slide="discover_centrosome"/>
+					<tutorial title="The Centrosome organizes the Cytoskeleton" slide="about_centrosome"/>
+					<tutorial title="Go and Explore!" slide="welcome_explore"/>
+					<tutorial title="The Plasma Membrane" slide="about_membrane"/>
+					<tutorial title="How to: Pseudopod" slide="howto_ppod"/>
+					<tutorial title="Make a pseudopod!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="ppod1"/>
+			</action>
+		</objective>
+		
+
+		
+		<objective id="ppod1" active="false" sound="2" trigger="true">
+			<data name="Make a pseudopod!" hidden="false" type="do_action" targetType="pseudopod_finish" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial id="Objectives, Messages, Encyclopedia">
+					<tutorial title="Way to go!" slide="ppod"/>
+					<tutorial title="Your next objective" slide="about_objective"/>
+					<tutorial title="Review previous messages" slide="about_review"/>
+					<tutorial title="Read more in the Encyclopedia" slide="about_encyclopedia"/>
+					<tutorial title="Try it again!" slide="ppod_again"/>
+					<!--<tutorial title="Get the centrosome!" slide="objective"/>-->
+				</showTutorial>
+				<activate_objective id="ppod2"/>
+				<show_resource id="atp"/>
+			</action>
+		</objective>
+		
+		<objective id="ppod2" active="false" sound="1" trigger="true">
+			<data name="Pseudopod 2 more times" hidden="false" type="do_action" targetType="pseudopod_finish" targetNum="1" progress="0" targetCondition="gr_eq" delay="15"/>
+			<action>
+				<activate_objective id="ppod3"/>
+				
+			</action>
+		</objective>
+		
+		<objective id="ppod3" active="false" sound="1" trigger="true">
+			<data name="Pseudopod 1 more time" hidden="false" type="do_action" targetType="pseudopod_finish" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<discovery id="atp"/>
+				<showTutorial id="ATP">
+					<tutorial title="You discovered ATP!" slide="discover_atp"/>
+					<tutorial title="ATP powers the cell" slide="describe_atp"/>
+					<tutorial title="Hey, the cell is starting to move! That's great!" slide="talk_spike_mysterious"/>
+					<tutorial title="But it's going to need a way to make more ATP..." slide="talk_spike_mysterious"/>
+					<tutorial title="Find something to use as fuel for ATP!" slide="objective"/>
+				</showTutorial>
+				<!--<show_resource id="atp"/>-->
+				<activate_stuff id="g_batch"/>
+				<spawn_object id="gem_g" value="5" count="18" loc_id="surround" distance="1"/>
+				<!--<spawn_object id="gem_g" value="10" count="8" loc_id="surround"/>-->
+				<activate_objective id="find_g"/>
+			</action>
+		</objective>
+		
+
+		<!--
+		<objective id="click_nucleus" active="true">
+			<data name="Click on the Nucleus" hidden="true" type="select_thing" targetType="nucleus" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<discovery id="nucleus"/>
+				<showTutorial>
+					<tutorial title="You discovered the Nucleus!" slide="discover_nucleus"/>
+					<tutorial title="The Nucleus controls the cell" slide="about_nucleus"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<objective id="click_er" active="true">
+			<data name="Click on the ER" hidden="true" type="select_thing" targetType="er" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<discovery id="er"/>
+				<showTutorial>
+					<tutorial title="You discovered the Endoplasmic Reticulum!" slide="discover_er"/>
+					<tutorial title="About the Endoplasmic Reticulum" slide="about_er"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<objective id="click_golgi" active="true">
+			<data name="Click on the Golgi" hidden="true" type="select_thing" targetType="golgi" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<discovery id="golgi"/>
+				<showTutorial>
+					<tutorial title="You discovered the Golgi Body!" slide="discover_golgi"/>
+					<tutorial title="The Golgi processes vesicles" slide="about_golgi"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<objective id="click_centrosome" active="true">
+			<data name="Click on the Centrosome" hidden="true" type="select_thing" targetType="centrosome" targetNum="1" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<discovery id="centrosome"/>
+				<showTutorial>
+					<tutorial title="You discovered the Centrosome!" slide="discover_centrosome"/>
+					<tutorial title="The Centrosome organizes the Cytoskeleton" slide="about_centrosome"/>
+				</showTutorial>
+			</action>
+		</objective>
+		-->
+		
+		<objective id="find_g" active="false" sound="2" trigger="true">
+			<data name="Find some fuel" hidden="false" type="have_resource" targetType="g" targetNum="1" progress="0" targetCondition="gr_eq" delay="45" />
+			<action>
+				<discovery id="g"/>
+				<showTutorial id="Glucose">
+					<tutorial title="You got Glucose!" slide="discover_g"/>
+					<tutorial title="Glucose is the source of ATP" slide="about_g"/>
+					<tutorial title="The Cytoplasm makes ATP from Glucose" slide="anaerobic"/>
+					<tutorial title="Find a more efficient way to make ATP!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="find_mito"/>
+				<set_cyto_process value="true"/>
+				<show_resource id="g"/>
+				<spawn_object id="ves_mitochondrion" loc_id="nearby" move_type="towards_cell"/>
+			</action>
+		</objective>
+		
+		<objective id="find_mito" active="false" trigger="true">
+			<data name="Find a more efficient way to make ATP" hidden="false" type="have_thing" targetType="mitochondrion" targetNum="1" progress="0" targetCondition="gr_eq" delay="45" />
+			<action>
+				<discovery id="mitochondrion"/>
+				<showTutorial id="Mitochondria">
+					<tutorial title="You got a Mitochondrion!" slide="discover_mito"/>
+					<tutorial title="About Mitochondria (1/2)" slide="about_mito_1"/>
+					<tutorial title="About Mitochondria (2/2)" slide="about_mito_2"/>
+					<tutorial title="Produce ATP until you have 1000!" slide="objective"/>
+				</showTutorial>
+				<show_interface id="quantpanel"/>
+				<activate_objective id="make_lots_atp"/>
+			</action>
+		</objective>
+		
+		<objective id="make_lots_atp" active="false" sound="2" trigger="true">
+			<data name="Produce ATP until you have 1000" hidden="false" type="have_resource" targetType="atp" targetNum="1000" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial id="You Win!">
+					<tutorial title="Awesome! This one looks like a keeper." slide="talk_spike_mysterious"/>
+					<tutorial title="Sydney! Come look at this! It's working!" slide="talk_spike_mysterious"/>
+					<tutorial title="Hey, great work, Spike!" slide="talk_sydney_mysterious"/>
+					<tutorial title="Can you believe it? We're actually building living cells!" slide="talk_spike_mysterious" />
+					<tutorial title="Science is awesome like that. You need a break, though. Let me take over." slide="talk_sydney_mysterious" />
+					<tutorial title="Mmmm.... coffee. Now where'd I put that newspaper?" slide="talk_spike_mysterious"/>
+				</showTutorial>
+				<finish_level value="victory"/><!-- cinema="scene1"/>-->
+			</action>
+		</objective>
+		
+		<objective id="zero_atp" active="false" sound="2">
+			<data name="Run out of ATP" hidden="true" type="have_resource" targetType="atp" targetNum="10" progress="0" targetCondition="ls_eq" delay="45"/>
+			<action>
+				<showTutorial id="Ran out of ATP">
+					<tutorial title="Whoops, looks like the little fella ran out of ATP." slide="talk_spike_mysterious"/>
+					<tutorial title="That's okay. This cell looks promising anyway. Sydney! Come check this out!" slide="talk_spike_mysterious"/>
+					<tutorial title="Hey, great work, Spike!" slide="talk_sydney_mysterious"/>
+					<tutorial title="Can you believe it? We're actually building living cells right here in the lab!" slide="talk_spike_mysterious" />
+					<tutorial title="Science is awesome like that. You look like you need a break, though. Let me take over." slide="talk_sydney_mysterious" />
+					<tutorial title="Mmmm.... coffee. Now where'd I put that newspaper?" slide="talk_spike_mysterious"/>
+				</showTutorial>
+				<finish_level value="consolation"/><!-- cinema="scene1"/>-->
+			</action>
+		</objective>
+
+		
+	</levelTriggers>
+	
+</cellcraft>

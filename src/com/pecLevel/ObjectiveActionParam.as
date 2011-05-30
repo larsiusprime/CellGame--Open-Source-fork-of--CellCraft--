@@ -1,0 +1,1 @@
+﻿package com.pecLevel{	public class ObjectiveActionParam{		public var name:String; // If it'd be easier to have a const list, lemme know		public var val:String; // Should this be a string, or be typeless?  It can be an int, float, or string.			public function toString():String {			var str:String = ("{name=" + name + " val=" + val + "}");			return str;		}	}		}

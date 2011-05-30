@@ -1,0 +1,348 @@
+<cellcraft>
+	<levelInfo>
+		<level index="1" title="Pseudopod for the Win!" />
+		<size width="500" height="500" />
+		<start x="0" y="0" />
+		<background name="petridish" />
+		<resources atp="500" na="0" aa="0" fa="0" g="25"/>
+		<organelles mito="1" chloro="0" ribo="0" lyso="0" slicer="0" perox="0"/>
+		<membrane nodes="0"/>
+	</levelInfo>
+
+	<levelStuff>
+		<goodies>
+			<stuff name="na_batch" type="na" count="50" spawn="0.05" active="false" />
+			<stuff name="fa_batch" type="fa" count="50" spawn="0.1" active="false" />
+			<stuff name="aa_batch" type="aa" count="50" spawn="0.1" active="false" />
+			<stuff name="g_batch" type="g" count="50" spawn="0.2" active="false" />
+		</goodies>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelStuff>
+
+	<levelThings>
+		<goodies>
+		</goodies>
+		<waves>
+			<wave id="inj_0" type="virus_injector" count="5" spread="2" delay="0" sleep_seconds="15" />
+			<wave id="inj_1" type="virus_injector" count="15" spread="2" delay="0" sleep_seconds="15" />
+			<!--<wave id="inj_1" type="virus_injector" count="25" spread="2" delay="0" sleep_seconds="5" />-->
+		</waves>
+		<enemies>
+		</enemies>
+		<objects>
+		</objects>
+	</levelThings>
+	
+	<levelTriggers>
+		<objective id="load" active="true" sound="0" trigger="true">
+			<data name="Game Loads" hidden="true" type="game_load" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="0" />
+			<action>
+				<hide_organelle id="nucleus"/>
+				<hide_organelle id="golgi"/>
+				<hide_organelle id="er"/>
+				<hide_resource id="na"/>
+				<hide_resource id="aa"/>
+				<hide_resource id="fa"/>
+				<hide_interface id="ph"/>
+				<hide_interface id="sunlight"/>
+				<hide_interface id="daughtercells"/>
+				<hide_interface id="membranehealth"/>
+				<wipe_organelle_act id="nucleus"/>
+				<wipe_organelle_act id="slicer"/>
+				<hide_interface id="zoomer"/>
+				<hide_interface id="toxinlevel"/>
+				<set_sunlight value="1"/>
+				<set_toxinlevel value="0"/>
+				<set_cyto_process value="true"/>
+				<set_radicals value="false"/>
+			</action>
+		</objective>
+		
+		<objective id="start" active="true" sound="0" trigger="true">
+			<data name="Game Starts" hidden="true" type="game_start" targetType="null" targetNum="0" progress="0" targetCondition="true" delay="0" />
+			<action>
+				<showTutorial id="Organelles">
+					<tutorial title="Okay, so we've got the beginnings of a decent cell here." slide="talk_spike_normal"/>
+					<tutorial title="But it needs some more ORGANELLES. Let's start by adding a NUCLEUS." slide="talk_spike_normal"/>
+					<tutorial title="Organelles are like the cell's organs" slide="about_organelles"/>
+				</showTutorial>
+				<show_newthing id="nucleus"/>
+				<activate_objective id="get_nucleus"/>
+			</action>
+		</objective>
+		
+		<objective id="get_nucleus" active="false" sound="2" trigger="true">
+			<data name="Get the Nucleus" hidden="false" type="click_newthing" targetType="nucleus" targetNum="1" progress="0" targetCondition="gr_eq" delay="15" />
+			<action>
+				<plop_organelle id="nucleus"/>
+				<activate_objective id="plop_nucleus"/>
+			</action>
+		</objective>
+		
+		<objective id="plop_nucleus" active="false" sound="0" trigger="true">
+			<data name="Get the Nucleus" hidden="false" type="halfplop_organelle" targetType="nucleus" targetNum="1" progress="0" targetCondition="gr_eq" delay="30" />
+			<action>
+				<discovery id="nucleus"/>
+				<showTutorial id="Nucleus">
+					<tutorial title="You got the Nucleus!" slide="discover_nucleus"/>
+					<tutorial title="The Nucleus controls the cell" slide="about_nucleus"/>
+					<tutorial title="Now that the cell has a nucleus, it can start building things! Let's see what it can do!" slide="talk_spike_normal"/>
+					<tutorial title="But doesn't it need some raw materials first?" slide="talk_sydney_normal"/>
+					<tutorial title="You're right! I almost forgot! Let's put some AMINO ACIDS and NUCLEIC ACIDS in there." slide="talk_spike_normal"/>
+					<tutorial title="Find Amino Acids and Nucleic Acids!" slide="objective"/>
+				</showTutorial>
+				<activate_stuff id="aa_batch"/>
+				<activate_stuff id="na_batch"/>
+				<activate_stuff id="g_batch"/>
+				<spawn_object id="gem_aa" value="50" count="18" loc_id="surround" distance="1" />
+				<spawn_object id="gem_na" value="10" count="9" loc_id="surround" distance="0" />
+				<activate_objective id="find_aa"/>
+				<activate_objective id="find_na"/>
+				<activate_objective id="find_aa_na_2"/>
+				<set_arrow_show/>
+			</action>
+		</objective>
+		
+		<objective id="find_aa" active="false" sound="2" trigger="true">
+			<data name="Find Amino Acids" hidden="false" type="have_resource" targetType="aa" targetNum="1" progress="0" targetCondition="gr_eq" delay="45" />
+			<action>
+				<discovery id="aa"/>
+				<showTutorial id="Amino acids">
+					<tutorial title="You discovered Amino Acids!" slide="discover_aa"/>
+					<tutorial title="Amino Acids are the building blocks of Protein" slide="about_aa" />
+				</showTutorial>
+				<show_resource id="aa"/>
+				<throw_flag id="find_aa_na"/> 
+			</action>
+		</objective>
+		
+		<objective id="find_na" active="false" sound="2" trigger="true">
+			<data name="Find Nucleic Acids" hidden="false" type="have_resource" targetType="na" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<discovery id="na"/>
+				<showTutorial id="Nucleic acids">
+					<tutorial title="You discovered Nucleic Acids!" slide="discover_na"/>
+					<tutorial title="Nucleic Acids are used to make DNA & RNA" slide="about_na" />
+				</showTutorial>
+				<show_resource id="na"/>
+				<throw_flag id="find_aa_na"/> 
+			</action>
+		</objective>
+				
+		<objective id="find_aa_na_2" active="false" sound="0" trigger="false"> 
+			<data name="Find Amino Acids & Nucleic Acids (NA)" hidden="true" type="throw_flag" targetType="find_aa_na" targetNum="2" progress="0" targetCondition="gr_eq" delay="0"/>
+			<action>
+				<showTutorial id="Selecting the nucleus">
+					<tutorial title="The cell's got building materials now, but it needs RIBOSOMES to make complex proteins." slide="talk_sydney_normal"/>
+					<tutorial title="How to build things" slide="click_nucleus"/>
+				</showTutorial>
+				<add_organelle_act id="nucleus" value="buy_ribosome"/>
+				<activate_objective id="click_nucleus"/>
+			</action>
+		</objective>
+		
+		<objective id="click_nucleus" active="false" sound="2" trigger="true">
+			<data name="Click on the Nucleus" hidden="false" type="select_thing" targetType="nucleus" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial id="Building things">
+					<tutorial title="How to build things: 1/3" slide="about_select_1"/>
+					<tutorial title="How to build things: 2/3" slide="about_select_2"/>
+					<tutorial title="How to build things: 3/3" slide="buy_ribosomes"/>
+				</showTutorial>
+				<activate_objective id="action_buy_ribosome"/>
+			</action>
+		</objective>
+					
+		<objective id="action_buy_ribosome" active="false" sound="0" trigger="true">
+			<data name="Make some Ribosomes" hidden="false" type="do_action" targetType="buy_ribosome" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<pre_action>
+				<show_interface id="zoomer"/>
+			</pre_action>
+			<action>
+				<showTutorial id="Zooming & scrolling">
+					<tutorial title="Something's happening at the Nucleus! I'm going to zoom in!" slide="talk_sydney_happy"/>
+					<tutorial title="How to : change magnification" slide="about_zoom_1"/>
+					<tutorial title="How to : change camera centering" slide="about_zoom_2"/>
+					<tutorial title="How to : scroll" slide="about_scroll"/>
+				</showTutorial>
+				<set_zoom value="0.25" time="15" />
+				<set_scroll_to target="nucleus" time="15" />
+				<activate_objective id="build_ribosomes_1"/>
+			</action>
+		</objective>
+		
+		<objective id="build_ribosomes_1" active="false" sound="0" trigger="true">
+			<data name="Build some Ribosomes" hidden="true" type="have_thing" targetType="ribosome" targetNum="1" progress="0" targetCondition="gr_eq" delay="0"/>
+			<action>
+				<activate_objective id="build_ribosomes_2"/>
+			</action>
+		</objective>
+		
+		<objective id="build_ribosomes_2" active="false" sound="0" trigger="true">
+			<data name="Build some Ribosomes" hidden="false" type="have_thing" targetType="ribosome" targetNum="5" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<discovery id="ribosome"/>
+				<showTutorial id="Ribosomes">
+					<tutorial title="You got Ribosomes!" slide="discover_ribosome" />
+					<tutorial title="Ribosomes are like factories" slide="about_ribosome"/>
+					<tutorial title="Ribosome production: 1/4" slide="about_ribosome_1" />
+					<tutorial title="Ribosome production: 2/4" slide="about_ribosome_2" />
+					<tutorial title="Ribosome production: 3/4" slide="about_ribosome_3" />
+					<tutorial title="Ribosome production: 4/4" slide="about_ribosome_4" />
+					<tutorial title="Make more ribosomes until you have 20!" slide="objective"/>
+				</showTutorial>
+				<set_arrow_show/>
+				<activate_objective id="action_over_ribosome"/>
+				<activate_objective id="build_ribosomes_3"/>
+				</action>
+		</objective>
+		
+		<objective id="action_over_ribosome" active="false" sound="0" trigger="true">
+			<data name="Mouseover Ribosome" hidden="true" type="show_action_cost" targetType="buy_ribosome" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial id="Action costs">
+					<tutorial title="..." slide="about_actioncost"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<objective id="build_ribosomes_3" active="false" sound="2" trigger="false">
+			<data name="Make more ribosomes until you have 20" hidden="false" type="have_thing" targetType="ribosome" targetNum="20" progress="0" targetCondition="gr_eq" delay="45"/>
+
+			<pre_action>
+				
+				<activate_objective id="action_buy_slicer"/>
+			</pre_action>
+			<action>
+				<showTutorial id="Slicer enzymes 1">
+					<tutorial title="The cell has plenty of RIBOSOMES now. Let's see if it can build some basic proteins, like SLICER ENZYMES." slide="talk_spike_normal"/>
+					<tutorial title="New Action!" slide="newaction_buy_slicer"/>
+					<tutorial title="Make Some Slicer Enzymes!" slide="objective"/>
+				</showTutorial>
+
+				<add_organelle_act id="nucleus" value="buy_slicer"/>
+			</action>
+		</objective>
+		
+		<objective id="action_buy_slicer" active="false" sound="2" trigger="true">
+			<data name="Make some slicer enzymes" hidden="false" type="do_action" targetType="buy_slicer" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial id="SPIKE: Hey, the nucleus is making something else!">
+					<tutorial title="Hey, the nucleus is making something else! Let me take a look..." slide="talk_spike_happy"/>
+				</showTutorial>
+				<set_zoom value="0.35" time="45" />
+				<set_scroll_to target="nucleus" time="45" />
+				<activate_objective id="build_slicers_1"/>
+			</action>
+		</objective>
+		
+		<objective id="build_slicers_1" active="false" sound="2" trigger="true">
+			<data name="Make some slicer enzymes" hidden="false" type="have_thing" targetType="slicer" targetNum="5" progress="0" targetCondition="gr_eq" delay="10"/>
+			<action>
+				<showTutorial id="Slicer enzymes 2">
+					<tutorial title="You got Slicer Enzmyes!" slide="discover_slicer" />
+					<tutorial title="Hey, slicer enzymes! Let's see if it can make some more!" slide="talk_spike_happy"/>
+					<tutorial title="Make more slicer enzymes until you have 10!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="action_over_slicer"/>
+				<activate_objective id="build_slicers_2"/>
+				<set_arrow_show/>
+			</action>
+		</objective>
+		
+		<objective id="action_over_slicer" active="false" sound="0" trigger="true">
+			<data name="Mouseover Slicer Enzyme" hidden="true" type="show_action_cost" targetType="buy_slicer" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<action>
+				<showTutorial id="Temporary costs">
+					<tutorial title="..." slide="about_rna_cost_1"/>
+					<tutorial title="..." slide="about_rna_cost_2"/>
+					<tutorial title="..." slide="about_rna_cost_3"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<objective id="build_slicers_2" active="false" sound="2" trigger="false">
+			<data name="Make more slicer enzymes until you have 10" hidden="false" type="have_thing" targetType="slicer" targetNum="10" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<discovery id="slicer"/>
+				<showTutorial id="SPIKE: Uh... ah... AH-CHOO!">
+					<tutorial title="Uh... ah... AH-CHOO!" slide="talk_spike_sneeze" />
+					<tutorial title="Um... Sydney? I think I just sneezed into the petri dish..." slide="talk_spike_nervous" />
+					<tutorial title="That's not good.... we'd better zoom out and see if any viruses got in there..." slide="talk_sydney_nervous"/>
+				</showTutorial>
+				<activate_objective id="virus_alert"/>
+				<send_wave id="inj_0"/>
+				
+			</action>
+		</objective>
+		
+		<objective id="virus_alert" active="false" trigger="true">
+			<data name="See if any viruses got in the petri dish" hidden="false" type="enemy_alert_finish" targetType="inj_0" targetNum="1" progress="0" targetCondition="true" delay="0"/>
+			<pre_action>
+				<show_interface id="membranehealth"/>
+			</pre_action>
+			<action>
+				<showTutorial id="Viral defense 1">
+					<tutorial title="Uh-oh, Spike! I think you have a cold! There are viruses all over the petri dish!" slide="talk_sydney_anxious" />
+					<tutorial title="I'm sorry! We could lose everything if the cell can't fight them off!" slide="talk_spike_anxious"/>
+					<tutorial title="The good news is, that cell has SLICER ENZMYES! Let's hope it fights back!" slide="talk_sydney_nervous"/>
+					<tutorial title="Viral defense 1/4" slide="virus_defense_1"/>
+					<tutorial title="Viral defense 2/4" slide="virus_defense_2"/>
+					<tutorial title="Viral defense 3/4" slide="virus_defense_3"/>
+					<tutorial title="Viral defense 4/4" slide="virus_defense_slicer"/>
+					<tutorial title="Survive the Viruses!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="kill_viruses"/>
+				<activate_objective id="virus_escape"/>
+			</action>
+		</objective>
+		
+		<objective id="virus_escape" active="false" trigger="true">
+			<data name="Virus has escaped!" hidden="true" type="virus_dormant" targetType="null" targetNum="1" progress="0" targetCondition="gr_eq" delay="45"/>
+			<action>
+				<showTutorial id="Virus has escaped!">
+					<tutorial title="Virus has escaped!" slide="on_virus_escape"/>
+				</showTutorial>
+			</action>
+		</objective>
+		
+		<objective id="kill_viruses" active="false" trigger="false">
+			<data name="Survive the Viruses!" hidden="false" type="enemy_survive" targetType="inj_0" targetNum="0" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="Viral defense 2">
+					<tutorial title="Take that, viruses! Man, those slicer enzmyes really chop through that RNA!" slide="talk_spike_happy"/>
+					
+					<tutorial title="Viral defense 1/3" slide="virus_defense_4"/>
+					<tutorial title="Viral defense 2/3" slide="virus_defense_5"/>
+					<tutorial title="Viral defense 3/3" slide="virus_defense_6"/>
+					<tutorial title="Oh no! There's more coming! The cell needs more SLICER ENZYMES!" slide="talk_spike_anxious"/>
+					<tutorial title="Survive the Viruses!" slide="objective"/>
+				</showTutorial>
+				<activate_objective id="kill_viruses_again"/>
+				<send_wave id="inj_1"/>
+			</action>
+		</objective>
+		
+		<objective id="kill_viruses_again" active="false" trigger="true">
+			<data name="Survive the Viruses!" hidden="false" type="enemy_survive" targetType="inj_1" targetNum="0" progress="0" targetCondition="true" delay="45"/>
+			<action>
+				<showTutorial id="You win!">
+					<tutorial title="" slide="virus_recycle_slicer"/>
+					<tutorial title="Man, that was close!" slide="talk_spike_nervous"/>
+					<tutorial title="No kidding! Those are some tough little cells!" slide="talk_sydney_nervous"/>
+					<tutorial title="Do you think we can use them to save our species somehow?" slide="talk_spike_normal"/>
+					<tutorial title="Maybe! Let's take a break and think it over." slide="talk_sydney_happy"/>
+				</showTutorial>
+				<finish_level value="victory"/>
+			</action>
+		</objective>
+		
+
+
+		
+	</levelTriggers>
+	
+</cellcraft>
