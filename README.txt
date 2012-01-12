@@ -1,5 +1,6 @@
 This game consists of code, data, images, and audio. 
 
+
 All of the game's art and audio assets, with the exception of the music tracks,
 are under the license described in ASSET_LICENSE.TXT - you can basically do
 anything with them as long as you share your changes.
